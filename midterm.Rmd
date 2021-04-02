@@ -1,0 +1,110 @@
+---
+title: "STAT 345 Midterm Project"
+date: "Due April 9"
+author: "Douglas Klister"
+output:
+  html_document: default
+  pdf_document: default
+font: 12pt
+---
+
+> "NOBODY KNOWS ANYTHING. Not one person in the entire motion picture field knows for a certainty what’s going to work. Every time out it’s a guess—and, if you’re lucky, an educated one." William Goldman, _Adventures in the Screen Trade_
+
+Your data for the midterm project consists of the 1000 highest rated movies on the Internet Movie Database (IMDB). You can find the first 50 movies [here](https://www.imdb.com/search/title/?groups=top_1000&start=1), with navigational links to the other 950 movies.
+
+Each IMDB page records a large amount of information about each movie. We are interested in the following:
+
+   * The average rating of the movie by IMDB users. 
+   * The number of ratings of the movie. 
+   * The year the movie was released. 
+   * The gross revenue of the movie (US).
+   * The budget for the movie.
+   * The movie's title.
+   * The movie’s genre(s). 
+   * The four top-billed actors.
+   * The text of the 25 "most helpful" reviews, as well as their helpfulness (ratio of helpful votes out of total votes.) 
+    
+Note that the first five (and last) variables are numeric, and the genre, title, and reviews are strings. In some cases, some of these variables may be missing for a particular movie.
+
+In some cases, the business information page lists multiple gross revenues, depending on the country, or gross receipts by different dates. In case of ambiguity, we are interested in gross receipts for the US, and want to use the figure for the latest available date. If no gross revenue figure is available for the US, treat the gross revenue as missing.
+
+**General advice:** Get started on this one early. If you wait to the last minute, it will not go well.
+
+1. (30 pts) Write code to extract the variables described above from all 1000 movies, and store it in a data frame. For full credit, you should write a function which can extract this information from an arbitrary movie code (or url), and then further code which uses that function and applies it to all 1000 movies. For full credit, your code should avoid loops in favor of vectorized operations and apply (and sapply, lapply, etc., as convenient). Your code should handle missing values appropriately, and should not convert categorical variables into numbers, or numbers into strings, etc. 
+```{r}
+# call rvest and stringr libraries, these will be used for a lot of our data scraping
+library(tidyverse)
+library(rvest)
+library(stringr)
+library(xml2)
+
+# read in website
+url <- "https://www.imdb.com/search/title/?groups=top_1000&start=1"
+html <- read_html(url)
+```
+
+```{r}
+rating <- html_nodes(html, ".text-primary") %>% html_text() %>% as.numeric()
+
+num_ratings <- html_nodes(html, ".sort-num_votes-visible span:nth-child(2)") %>% html_text() %>% as.numeric()
+
+year <- html_nodes(html, ".text-muted.unbold)") %>% html_text() %>% as.numeric()
+
+#gross_revenue <- html_nodes(html, ".sort-num_votes-visible span:nth-child(2)") %>% html_text()
+
+#budget <- html_nodes(html, ".sort-num_votes-visible span:nth-child(2)") %>% html_text()
+
+title <- html_nodes(html, ".lister-item-header a") %>% html_text()
+
+#genre <- html_nodes(html, ".sort-num_votes-visible span:nth-child(2)") %>% html_text()
+
+#actors <- html_nodes(html, ".sort-num_votes-visible span:nth-child(2)") %>% html_text()
+
+#reviews <- html_nodes(html, ".sort-num_votes-visible span:nth-child(2)") %>% html_text()
+
+
+# titles3 <- lapply(paste0('https://www.imdb.com/search/title/?groups=top_1000&start=1', c(-1, 51, 101)),
+#                 function(url){
+#                    url %>% read_html() %>% 
+#                     html_nodes(".lister-item-header a") %>% 
+#                     html_text()
+#                 })
+# titles3.2 <- unlist(titles3)
+                
+
+```
+
+
+_Victory conditions:_ You have a data frame with 1000 rows and columns that contain the first six variables, as well as each genre, review, and review helpfulness scores in appropriately formatted columns. Columns have short but clear names. Most rows have no missing values; the few rows where there are missing values have NA in the appropriate places. 
+
+_Mercy condition:_ If you are struggling to get these data in a reasonable form, a compiled, reasonably clean and accurate version for either the URL list or movie data will be added to Canvas called `imdb_urls.csv` and `moviedata.Rdata` respectively.  Use them to answer the following parts, if necessary. Your work in this part, even if not complete, can be scored for partial credit.
+
+2. (30 pts) Write code to plot the distributions of the first five variables listed above. Make sure missing values, if any, are handled gracefully. Your plots should be appropriately labeled, titled, colored, etc. Comment on the features each plot presents -- what information is gained by seeing these graphics?
+
+```{r}
+
+```
+
+
+3. (20 pts) Complete a sentiment analyses on the 25 most helpful reviews for each movie. The choice of lexicon is up to you, but explain your reasons why your choice is the most reasonable/appropriate option. Add a summary of this information to your original data frame.
+
+```{r}
+
+```
+
+
+4. (20 pts) Variable Relationships. Create one plot that displays the relationship (or lack thereof) between any of the movie variables. Your plot should be appropriately labeled, titled, colored, etc. Your plot should display at minimum 3 variables. A plot with more variables included will be scored more favorably (as long as the plot is reasonable and legible). Reviews and helpfulness/sentiment scores are considered aggregate variables (e.g., 25 helpfulness scores will be considered a single variable). Some questions that you might consider when creating your plot are below, though you are not limited to these questions. 
+   - Is there any evidence of a relationship between review helpfulness and review sentiment? 
+   - Do the review scores (from the most helpful reviews) generally agree with the overall IMDB average rating?
+   - Is there evidence of a relationship between average IMDB rating and a movie's gross? Does release year seem to have an effect on this relationship?
+   - Is there evidence of a relationship between a movie's budget and a movie's gross? Does release year seem to have an effect on this relationship? 
+   - Do any actors have an effect (positive or negative) on the relationship between budget, gross, or average IMDB rating? Is this pattern common across any genres?
+
+  
+  
+  
+  
+  
+  
+
+
